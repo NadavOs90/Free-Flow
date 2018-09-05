@@ -6,12 +6,14 @@ class Hanoi(object):
         self.left = range(size)
         self.mid = []
         self.right = []
+        self.count = 0
 
-    def print_towers_locations(self, index):
-        if isinstance(index, int):
-            print 'Index:', index
-        else:
+    def print_towers_locations(self, index=None):
+        if index:
             print 'Index:', int(index[::-1], 2)
+        else:
+            print 'Count:', self.count
+            self.count += 1
         for i in range(self.size):
             try:
                 left = self.left[i]
@@ -26,7 +28,6 @@ class Hanoi(object):
             except IndexError:
                 right = '-'
             print (left, mid, right)
-        # print self.left, self.mid, self.right
 
     def move(self, i):
         if i in self.right:
@@ -66,22 +67,22 @@ class Hanoi(object):
 
     def solve_recursively(self):
         n = self.size
-        index = 0
-        self.tower(n, self.left, self.mid, self.right, index)
+        self.tower(n, self.left, self.mid, self.right)
 
-    def tower(self, n, t_from, t_aux, t_to, index):
-        if n == 0:
-            self.move_rec(t_from, t_to, index)
-            self.print_towers_locations(index)
+    def tower(self, n, t_from, t_aux, t_to):
+
+        if n == 1:
+            self.move_rec(t_from, t_to)
+            self.print_towers_locations()
             return
-        self.tower(n-1, t_from, t_to, t_aux, index+1)
-        self.move_rec(t_from, t_to, index)
-        self.tower(n-1, t_aux, t_from, t_to, index+1)
+        self.tower(n-1, t_from, t_to, t_aux)
+        self.move_rec(t_from, t_to)
+        self.tower(n-1, t_aux, t_from, t_to)
 
-    def move_rec(self, t_from, t_to, index):
-        self.print_towers_locations(index)
-        t_to = [t_from.pop(0)] + t_to
+    def move_rec(self, t_from, t_to):
+        self.print_towers_locations()
+        t_to.insert(0, t_from.pop(0))
 
 
-# Hanoi(5).solve_iteratively()
-Hanoi(5).solve_recursively()
+Hanoi().solve_iteratively()
+Hanoi().solve_recursively()
